@@ -1,0 +1,25 @@
+version: '1.0'
+
+services:
+
+  chrome:
+    image: selenium/standalone-chrome:latest
+    container_name: chrome
+    hostname: chrome
+    restart: always
+    privileged: true
+    environment:
+      - SE_NODE_OVERRIDE_MAX_SESSIONS=true
+      - SE_NODE_MAX_SESSIONS=10
+      - SE_NODE_SESSION_TIMEOUT=18000
+    ports:
+      - 4444:4444
+
+  app:
+    image: pgpthezoo/pgp-crawl-tool:latest
+    restart: always
+    depends_on:
+      - chrome
+    command: flask run --host 0.0.0.0 --no-debugger
+    ports:
+      - 5000:5000
